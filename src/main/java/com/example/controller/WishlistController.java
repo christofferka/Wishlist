@@ -1,7 +1,7 @@
-package com.example.wishlist.controller;
+package com.example.controller;
 
-import com.example.wishlist.model.WishlistAttraction;
-import com.example.wishlist.service.WishlistService;
+import com.example.model.WishlistAttraction;
+import com.example.service.WishlistService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

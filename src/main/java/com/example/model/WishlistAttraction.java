@@ -1,4 +1,4 @@
-package com.example.wishlist.model;
+package com.example.model;
 
 import java.util.List;
 import java.util.UUID;
