@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="da">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="'Rediger ' + ${attraction.name}">Rediger attraktion</title>
+  <link th:href="@{/style.css}" rel="stylesheet">
+</head>
+<body>
+<h1 th:text="'Rediger ' + ${attraction.name}"></h1>
+
+<form th:action="@{|/attractions/${attraction.id}/edit|}" method="post">
+  <label for="name">Navn:</label>
+  <input type="text" id="name" name="name" th:value="${attraction.name}" required><br>
+
+  <label for="description">Beskrivelse:</label>
+  <textarea id="description" name="description" required th:text="${attraction.description}"></textarea><br>
+
+  <label for="city">By:</label>
+  <input type="text" id="city" name="city" th:value="${attraction.city}" required><br>
+
+  <label for="tags">Tags (kommasepareret):</label>
+  <input type="text" id="tags" name="tags"
+         th:value="${#strings.listJoin(attraction.tags, ', ')}"><br>
+
+  <button type="submit">Gem ændringer</button>
+</form>
+
+<a th:href="@{|/attractions/${attraction.id}|}">⬅ Tilbage</a>
+</body>
+</html>
