@@ -13,10 +13,10 @@
     </parent>
 
     <groupId>com.example</groupId>
-    <artifactId>TouristAttraction</artifactId>
+    <artifactId>Wishlist</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>TouristAttraction</name>
-    <description>TouristAttraction</description>
+    <name>Wishlist</name>
+    <description>Wishlist</description>
 
     <properties>
         <java.version>21</java.version>
