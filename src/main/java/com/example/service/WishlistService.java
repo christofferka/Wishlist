@@ -1,37 +1,33 @@
 package com.example.service;
 
-import com.example.model.WishlistAttraction;
-import com.example.repository.WishlistRepository;
+import com.example.model.User;
+import com.example.model.Wish;
+import com.example.repository.WishRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class WishlistService {
 
-    private final WishlistRepository wishlistRepository;
+    private final WishRepository wishRepository;
 
-    public WishlistService(WishlistRepository wishlistRepository) {
-        this.wishlistRepository = wishlistRepository;
+    public WishlistService(WishRepository wishRepository) {
+        this.wishRepository = wishRepository;
     }
 
-    public List<WishlistAttraction> getAllAttractions() {
-        return wishlistRepository.getAttractions();
+    public void saveWish(Wish wish) {
+        wishRepository.save(wish);
     }
 
-    public WishlistAttraction getAttraction(UUID id) {
-        return wishlistRepository.getAttraction(id);
+    public List<Wish> getWishesByUser(User user) {
+        return wishRepository.findByUser(user);
     }
 
-    public void addAttraction(WishlistAttraction attraction) {
-        wishlistRepository.addAttraction(attraction);
+    public Wish getWish(Long id) {
+        return wishRepository.findById(id).orElse(null);
     }
 
-    public void updateAttraction(WishlistAttraction attraction) {
-        wishlistRepository.updateAttraction(attraction);
-    }
-
-    public void deleteAttraction(UUID id) {
-        wishlistRepository.deleteAttraction(id);
+    public void deleteWish(Long id) {
+        wishRepository.deleteById(id);
     }
 }
