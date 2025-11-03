@@ -3,25 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Rediger Ønske | HaqqWish</title>
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
+<!-- Baggrund og generel styling -->
 <body class="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 min-h-screen text-gray-100 font-sans">
 
-<!-- Navbar -->
+<!-- ===========================
+     NAVIGATION BAR
+     =========================== -->
 <nav class="flex justify-between items-center px-10 py-6 bg-blue-950/70 backdrop-blur-md shadow-lg border-b border-blue-800/50 fixed top-0 left-0 w-full z-50">
+    <!-- Logo og hjem-knap -->
     <a href="/" class="flex items-center space-x-2 group">
         <div class="bg-white rounded-full w-9 h-9 flex items-center justify-center text-sky-600 font-bold text-xl group-hover:scale-110 transition">☁</div>
         <h1 class="text-2xl font-bold tracking-tight group-hover:text-yellow-300 transition">HaqqWish</h1>
     </a>
+
+    <!-- Tilbage til oversigt -->
     <a href="/wishes/list" class="text-yellow-300 hover:text-yellow-100 font-medium">← Tilbage</a>
 </nav>
 
-<!-- Edit Form -->
+<!-- ===========================
+     REDIGERINGSFORMULAR
+     =========================== -->
 <div class="max-w-md mx-auto mt-32 bg-blue-950/50 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-blue-800/50">
+
+    <!-- Overskrift -->
     <h1 class="text-3xl text-center font-bold text-yellow-400 mb-6">Rediger Ønske</h1>
 
+    <!-- Formular til at redigere et eksisterende ønske -->
     <form th:action="@{'/wishes/update/' + ${wish.id}}" th:object="${wish}" method="post" class="space-y-5">
+
+        <!-- Beskrivelse -->
         <div>
             <label class="block text-yellow-300 mb-1">Beskrivelse</label>
             <input type="text" th:field="*{description}"
@@ -29,6 +43,7 @@
                    placeholder="Hvad ønsker du?" required>
         </div>
 
+        <!-- Link til varen -->
         <div>
             <label class="block text-yellow-300 mb-1">Link</label>
             <input type="url" th:field="*{link}"
@@ -36,6 +51,7 @@
                    placeholder="https://..." required>
         </div>
 
+        <!-- Prisfelt -->
         <div>
             <label class="block text-yellow-300 mb-1">Pris (DKK)</label>
             <input type="number" step="0.01" th:field="*{price}"
@@ -43,6 +59,7 @@
                    required>
         </div>
 
+        <!-- Knapper nederst -->
         <div class="flex justify-between pt-6">
             <a href="/wishes/list"
                class="text-yellow-300 hover:text-yellow-100 transition">← Tilbage</a>
@@ -54,7 +71,9 @@
     </form>
 </div>
 
-<!-- Footer -->
+<!-- ===========================
+     FOOTER
+     =========================== -->
 <footer class="text-center mt-20 py-6 text-sm text-gray-400 border-t border-blue-800/50">
     © 2025 HaqqWish — Alle dine ønsker samlet ét sted
 </footer>

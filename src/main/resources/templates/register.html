@@ -3,38 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <title>Opret Profil | HaqqWish</title>
+    <!-- Henter Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
+<!-- Baggrund og centrering af formularen -->
 <body class="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 min-h-screen flex items-center justify-center text-gray-100 font-sans">
 
+<!-- Selve boksen der indeholder registreringsformularen -->
 <div class="bg-blue-950/50 backdrop-blur-md rounded-2xl shadow-xl p-10 w-full max-w-md border border-blue-800/50">
+
+    <!-- Overskrift -->
     <h1 class="text-4xl font-bold text-center text-yellow-400 mb-8">Opret din konto</h1>
 
+    <!-- Formularen der sender data til /register (controlleren håndterer det) -->
     <form th:action="@{/register}" th:object="${user}" method="post" class="space-y-6">
+
+        <!-- Brugernavn -->
         <div>
             <label class="block text-yellow-300 mb-1">Brugernavn</label>
             <input type="text" th:field="*{username}" class="w-full rounded px-3 py-2 text-gray-900" required>
         </div>
 
+        <!-- Email -->
         <div>
             <label class="block text-yellow-300 mb-1">Email</label>
             <input type="email" th:field="*{email}" class="w-full rounded px-3 py-2 text-gray-900" required>
         </div>
 
+        <!-- Adgangskode -->
         <div>
             <label class="block text-yellow-300 mb-1">Adgangskode</label>
             <input type="password" th:field="*{password}" class="w-full rounded px-3 py-2 text-gray-900" required>
         </div>
 
+        <!-- Viser fejlbesked hvis fx emailen allerede findes -->
         <div th:if="${error}" class="text-red-400 text-sm text-center" th:text="${error}"></div>
 
+        <!-- Send-knap -->
         <button type="submit"
                 class="w-full bg-yellow-400 text-blue-900 font-semibold py-2 rounded-lg hover:bg-yellow-300 transition">
             Opret Konto
         </button>
     </form>
 
+    <!-- Link til login-side hvis man allerede har en konto -->
     <p class="text-center text-gray-300 mt-6">
         Har du allerede en konto?
         <a href="/login" class="text-yellow-300 hover:text-yellow-100 font-semibold">Log ind her</a>
