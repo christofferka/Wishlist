@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import java.util.UUID;
 
 /**
- * Denne klasse repræsenterer et ønske i databasen.
- * Hver instans svarer til en række i "wishes"-tabellen.
+ * Repræsenterer et ønske i databasen.
+ * Hver instans svarer til en række i tabellen "wishes".
  */
 @Entity
 @Table(name = "wishes")
@@ -23,22 +23,23 @@ public class Wish {
 
     /**
      * Unikt ID til deling.
-     * Bruges når et ønske skal kunne deles med andre via et link.
-     * UUID sikrer at hvert ID er globalt unikt.
+     * Bruges, når et ønske skal deles med andre via et link.
+     * Bliver genereret automatisk før første gem (PrePersist).
      */
     @Column(unique = true, updatable = false)
-    private String shareId = UUID.randomUUID().toString();
+    private String shareId;
 
     @PrePersist
     public void generateShareId() {
+        // Sørger for at der altid genereres et unikt delings-ID før objektet gemmes
         if (this.shareId == null || this.shareId.isEmpty()) {
             this.shareId = UUID.randomUUID().toString();
         }
     }
 
     /**
-     * Relation til den bruger, som ejer ønsket.
-     * "ManyToOne" betyder, at mange ønsker kan tilhøre én bruger.
+     * Relation til den bruger, der ejer ønsket.
+     * Mange ønsker kan tilhøre én bruger.
      */
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -47,16 +48,16 @@ public class Wish {
     // Tom konstruktør (kræves af JPA)
     public Wish() {}
 
-    // Konstruktør til oprettelse af nye ønsker
+    // Konstruktør til at oprette nye ønsker
     public Wish(String description, String link, double price, User user) {
         this.description = description;
         this.link = link;
         this.price = price;
         this.user = user;
-        this.shareId = UUID.randomUUID().toString(); // genererer nyt delings-ID
+        this.shareId = UUID.randomUUID().toString(); // Genererer nyt delings-ID ved oprettelse
     }
 
-    // Getters og Setters
+    // Getters
     public Long getId() { return id; }
     public String getDescription() { return description; }
     public String getLink() { return link; }
@@ -64,9 +65,11 @@ public class Wish {
     public User getUser() { return user; }
     public String getShareId() { return shareId; }
 
+    // Setters
     public void setId(Long id) { this.id = id; }
     public void setDescription(String description) { this.description = description; }
     public void setLink(String link) { this.link = link; }
     public void setPrice(double price) { this.price = price; }
     public void setUser(User user) { this.user = user; }
+    public void setShareId(String shareId) { this.shareId = shareId; }
 }
