@@ -2,126 +2,107 @@ package com.example.controller;
 
 import com.example.model.User;
 import com.example.model.Wish;
+import com.example.model.Wishlist;
+import com.example.service.WishService;
 import com.example.service.WishlistService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 /**
- * Controller-laget for håndtering af brugerens ønskeliste.
- * Her defineres alle web-ruter (URL’er) der styrer visning, tilføjelse,
- * redigering, sletning og deling af ønsker.
+ * Controller: håndterer ønskesedler (flere pr. bruger).
+ * Indeholder funktioner til visning, oprettelse, deling og sletning af ønskesedler.
  */
 @Controller
 @RequestMapping("/wishes")
 public class WebWishlistController {
 
     private final WishlistService wishlistService;
+    private final WishService wishService;
 
-    // Constructor der injicerer service-laget
-    public WebWishlistController(WishlistService wishlistService) {
+    public WebWishlistController(WishlistService wishlistService, WishService wishService) {
         this.wishlistService = wishlistService;
-    }
-
-    /**
-     * Viser den nuværende brugers ønskeliste.
-     * Kræver at brugeren er logget ind (tjek via session).
-     */
-    @GetMapping("/list")
-    public String showWishlist(Model model, HttpSession session) {
-        User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser == null) return "redirect:/login";
-
-        List<Wish> wishes = wishlistService.getWishesByUser(currentUser);
-        model.addAttribute("wishes", wishes);
-        return "wishlist";
-    }
-
-    /**
-     * Viser formular til at tilføje et nyt ønske.
-     */
-    @GetMapping("/add")
-    public String showAddForm(Model model, HttpSession session) {
-        if (session.getAttribute("currentUser") == null) return "redirect:/login";
-        model.addAttribute("wish", new Wish());
-        return "form";
-    }
-
-    /**
-     * Gemmer et nyt ønske i databasen.
-     */
-    @PostMapping("/add")
-    public String addWish(@ModelAttribute Wish wish, HttpSession session) {
-        User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser == null) return "redirect:/login";
-        wish.setUser(currentUser);
-        wishlistService.saveWish(wish);
-        return "redirect:/wishes/list";
-    }
-
-    /**
-     * Viser redigeringsformular for et eksisterende ønske.
-     */
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model, HttpSession session) {
-        User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser == null) return "redirect:/login";
-
-        Wish wish = wishlistService.getWish(id);
-        if (wish == null || !wish.getUser().getId().equals(currentUser.getId()))
-            return "redirect:/wishes/list";
-
-        model.addAttribute("wish", wish);
-        return "edit";
-    }
-
-    /**
-     * Opdaterer et eksisterende ønske efter redigering.
-     */
-    @PostMapping("/update/{id}")
-    public String updateWish(@PathVariable Long id, @ModelAttribute Wish wish, HttpSession session) {
-        User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser == null) return "redirect:/login";
-
-        wish.setId(id);
-        wish.setUser(currentUser);
-        wishlistService.saveWish(wish);
-        return "redirect:/wishes/list";
-    }
-
-    /**
-     * Sletter et ønske (kun hvis det tilhører den loggede bruger).
-     */
-    @GetMapping("/delete/{id}")
-    public String deleteWish(@PathVariable Long id, HttpSession session) {
-        User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser == null) return "redirect:/login";
-
-        Wish wish = wishlistService.getWish(id);
-        if (wish != null && wish.getUser().getId().equals(currentUser.getId())) {
-            wishlistService.deleteWish(id);
-        }
-        return "redirect:/wishes/list";
+        this.wishService = wishService;
     }
 
     // ===========================
-    // DELINGSFUNKTION
+    //  VIS ALLE ØNSKESEDLER
     // ===========================
+    @GetMapping("/lists")
+    public String showAllWishlists(Model model, HttpSession session) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) return "redirect:/login";
 
-    /**
-     * Viser et enkelt ønske via et delingslink (uden login).
-     * Finder ønsket via shareId, som er et unikt UUID.
-     */
+        List<Wishlist> wishlists = wishlistService.getWishlistsByUser(currentUser);
+        model.addAttribute("wishlists", wishlists);
+        model.addAttribute("newWishlist", new Wishlist());
+        return "wishlists"; // viser oversigten over ønskesedler
+    }
+
+    // ===========================
+    //  OPRET NY ØNSKESEDDEL
+    // ===========================
+    @PostMapping("/createList")
+    public String createNewWishlist(@ModelAttribute Wishlist newWishlist, HttpSession session) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) return "redirect:/login";
+
+        wishlistService.createWishlist(newWishlist.getName(), currentUser);
+        return "redirect:/wishes/lists";
+    }
+
+    // ===========================
+    //  VIS EN SPECIFIK ØNSKESEDDEL
+    // ===========================
+    @GetMapping("/viewlist/{id}")
+    public String viewSpecificWishlist(@PathVariable Long id, Model model, HttpSession session) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) return "redirect:/login";
+
+        return wishlistService.getWishlistById(id)
+                .filter(w -> w.getUser().getId().equals(currentUser.getId()))
+                .map(wishlist -> {
+                    List<Wish> wishes = wishService.getWishesByWishlist(wishlist);
+                    model.addAttribute("wishes", wishes);
+                    model.addAttribute("wishlist", wishlist);
+                    model.addAttribute("shareId", wishlist.getShareId());
+                    return "wishlist"; // viser ønskerne i én ønskeseddel
+                })
+                .orElse("redirect:/wishes/lists");
+    }
+
+    // ===========================
+    //  SLET ØNSKESEDDEL
+    // ===========================
+    @GetMapping("/deletelist/{id}")
+    public String deleteWishlist(@PathVariable Long id, HttpSession session) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) return "redirect:/login";
+
+        wishlistService.getWishlistById(id).ifPresent(w -> {
+            if (w.getUser().getId().equals(currentUser.getId())) {
+                wishlistService.deleteWishlist(id);
+            }
+        });
+        return "redirect:/wishes/lists";
+    }
+
+    // ===========================
+    //  DEL ØNSKESEDDEL (OFFENTLIG VISNING)
+    // ===========================
     @GetMapping("/share/{shareId}")
     public String viewSharedWishlist(@PathVariable String shareId, Model model) {
-        return wishlistService.getWishByShareId(shareId)
-                .map(wish -> {
-                    model.addAttribute("wish", wish);
-                    model.addAttribute("owner", wish.getUser().getUsername());
-                    return "sharedWishlist"; // Viser delingssiden
+        return wishlistService.getWishlistByShareId(shareId)
+                .map(wishlist -> {
+                    List<Wish> wishes = wishService.getWishesByWishlist(wishlist);
+                    model.addAttribute("wishlist", wishlist);
+                    model.addAttribute("owner", wishlist.getUser().getUsername());
+                    model.addAttribute("wishes", wishes);
+                    return "sharedWishlist";
                 })
-                .orElse("wishlistNotFound"); // Hvis ønsket ikke findes
+                .orElse("wishlistNotFound");
     }
 }

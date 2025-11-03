@@ -1,29 +1,22 @@
 package com.example.repository;
 
-import com.example.model.User;
 import com.example.model.Wish;
+import com.example.model.Wishlist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
-import java.util.Optional;
 
 /**
- * Repository-laget står for forbindelsen til databasen.
- * Her håndteres alle forespørgsler (queries) relateret til Wish-objekter.
- * Spring Data JPA genererer automatisk SQL ud fra metodernes navne.
+ * Repository for individuelle ønsker.
+ * Indeholder forespørgsler relateret til ønsker i en ønskeseddel.
  */
 @Repository
 public interface WishRepository extends JpaRepository<Wish, Long> {
 
-    /**
-     * Finder alle ønsker, der tilhører en bestemt bruger.
-     * Bruges til at vise "Mine Ønsker" for den loggede bruger.
-     */
-    List<Wish> findByUser(User user);
+    // Henter alle ønsker, der tilhører en bestemt ønskeseddel
+    List<Wish> findByWishlist(Wishlist wishlist);
 
-    /**
-     * Finder et enkelt ønske via et unikt delings-ID (shareId).
-     * Bruges, når en ønskeliste deles med andre gennem et link.
-     */
-    Optional<Wish> findByShareId(String shareId);
+    // Henter kun de reserverede ønsker i en ønskeseddel (valgfrit brug)
+    List<Wish> findByWishlistAndReservedTrue(Wishlist wishlist);
 }

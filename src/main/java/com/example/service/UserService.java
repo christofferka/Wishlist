@@ -5,41 +5,33 @@ import com.example.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 /**
- * Denne klasse håndterer al logik relateret til brugere.
- * Den står for registrering, login og kommunikation med databasen via UserRepository.
+ * Håndterer logik for registrering og login af brugere.
  */
 @Service
 public class UserService {
+
     private final UserRepository userRepository;
 
-    // Dependency Injection: Spring indsætter automatisk repository
+    // Dependency injection af repository
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    /**
-     * Opretter en ny bruger, hvis emailen ikke allerede findes.
-     * Returnerer den gemte bruger eller null, hvis emailen er optaget.
-     */
+    // Registrerer en ny bruger, hvis e-mail ikke allerede findes
     public User registerUser(String username, String email, String password) {
         if (userRepository.findByEmail(email) != null) {
-            return null; // Email findes allerede
+            return null; // e-mail er allerede i brug
         }
         User user = new User(username, email, password);
-        return userRepository.save(user); // Gemmer ny bruger i databasen
+        return userRepository.save(user);
     }
 
-    /**
-     * Logger en bruger ind, hvis email og adgangskode matcher.
-     * Returnerer brugeren ved succes, ellers null.
-     */
+    // Tjekker login med e-mail og password
     public User loginUser(String email, String password) {
         User user = userRepository.findByEmail(email);
-
-        // Simpel adgangskodekontrol (kan senere erstattes med hashed passwords)
         if (user != null && user.getPassword().equals(password)) {
             return user;
         }
-        return null; // Login mislykkedes
+        return null;
     }
 }

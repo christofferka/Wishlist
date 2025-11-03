@@ -41,7 +41,7 @@ public class AuthController {
         User existingUser = userService.loginUser(user.getEmail(), user.getPassword());
         if (existingUser != null) {
             session.setAttribute("currentUser", existingUser);
-            return "redirect:/wishes/list"; // Send brugeren til sin ønskeliste
+            return "redirect:/wishes/lists"; // Send brugeren til sin ønskeliste
         }
         model.addAttribute("error", "Forkert email eller adgangskode");
         return "login";

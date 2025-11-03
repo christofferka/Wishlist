@@ -1,60 +1,43 @@
 package com.example.model;
 
 import jakarta.persistence.*;
-import java.util.UUID;
 
 /**
- * Repræsenterer et ønske i databasen.
- * Hver instans svarer til en række i tabellen "wishes".
+ * Et enkelt ønske, som tilhører en ønskeseddel.
+ * Kan reserveres af en person via delingslink.
  */
 @Entity
 @Table(name = "wishes")
 public class Wish {
 
-    // Primærnøgle (genereres automatisk af databasen)
+    // Primærnøgle – genereres automatisk
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Ønskets beskrivelse, link og pris
+    // Selve ønskets indhold
     private String description;
     private String link;
     private double price;
 
-    /**
-     * Unikt ID til deling.
-     * Bruges, når et ønske skal deles med andre via et link.
-     * Bliver genereret automatisk før første gem (PrePersist).
-     */
-    @Column(unique = true, updatable = false)
-    private String shareId;
+    // Om ønsket er reserveret, og af hvem
+    private boolean reserved = false;
+    private String reservedBy;
 
-    @PrePersist
-    public void generateShareId() {
-        // Sørger for at der altid genereres et unikt delings-ID før objektet gemmes
-        if (this.shareId == null || this.shareId.isEmpty()) {
-            this.shareId = UUID.randomUUID().toString();
-        }
-    }
-
-    /**
-     * Relation til den bruger, der ejer ønsket.
-     * Mange ønsker kan tilhøre én bruger.
-     */
+    // Hvilken ønskeseddel dette ønske tilhører
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "wishlist_id")
+    private Wishlist wishlist;
 
     // Tom konstruktør (kræves af JPA)
     public Wish() {}
 
-    // Konstruktør til at oprette nye ønsker
-    public Wish(String description, String link, double price, User user) {
+    // Konstruktør til oprettelse af nyt ønske
+    public Wish(String description, String link, double price, Wishlist wishlist) {
         this.description = description;
         this.link = link;
         this.price = price;
-        this.user = user;
-        this.shareId = UUID.randomUUID().toString(); // Genererer nyt delings-ID ved oprettelse
+        this.wishlist = wishlist;
     }
 
     // Getters
@@ -62,14 +45,16 @@ public class Wish {
     public String getDescription() { return description; }
     public String getLink() { return link; }
     public double getPrice() { return price; }
-    public User getUser() { return user; }
-    public String getShareId() { return shareId; }
+    public boolean isReserved() { return reserved; }
+    public String getReservedBy() { return reservedBy; }
+    public Wishlist getWishlist() { return wishlist; }
 
     // Setters
     public void setId(Long id) { this.id = id; }
     public void setDescription(String description) { this.description = description; }
     public void setLink(String link) { this.link = link; }
     public void setPrice(double price) { this.price = price; }
-    public void setUser(User user) { this.user = user; }
-    public void setShareId(String shareId) { this.shareId = shareId; }
+    public void setReserved(boolean reserved) { this.reserved = reserved; }
+    public void setReservedBy(String reservedBy) { this.reservedBy = reservedBy; }
+    public void setWishlist(Wishlist wishlist) { this.wishlist = wishlist; }
 }
