@@ -29,6 +29,13 @@ public class Wish {
     @Column(unique = true, updatable = false)
     private String shareId = UUID.randomUUID().toString();
 
+    @PrePersist
+    public void generateShareId() {
+        if (this.shareId == null || this.shareId.isEmpty()) {
+            this.shareId = UUID.randomUUID().toString();
+        }
+    }
+
     /**
      * Relation til den bruger, som ejer ønsket.
      * "ManyToOne" betyder, at mange ønsker kan tilhøre én bruger.
