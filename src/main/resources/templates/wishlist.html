@@ -17,10 +17,13 @@
     <div class="space-x-6">
         <a href="/wishes/lists"
            class="text-gray-300 hover:text-yellow-200 transition">Mine ønskesedler</a>
-        <a th:href="@{'/wishes/add'}"
+
+        <!-- KORRIGERET LINK til tilføj nyt ønske -->
+        <a th:href="@{'/wish/add/' + ${wishlist.id}}"
            class="bg-yellow-400 text-blue-900 px-4 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition">
             + Nyt Ønske
         </a>
+
         <a href="/logout" class="text-gray-300 hover:text-yellow-200 transition">Log ud</a>
     </div>
 </nav>
@@ -72,11 +75,12 @@
 
             <!-- Knapper -->
             <div class="flex justify-between items-center pt-4">
-                <a th:href="@{'/wishes/edit/' + ${wish.id}}"
+                <!-- KORRIGERET LINKS -->
+                <a th:href="@{'/wish/edit/' + ${wish.id}}"
                    class="bg-blue-500 hover:bg-blue-400 px-4 py-2 rounded-lg text-white font-medium transition block text-center">
                     Rediger
                 </a>
-                <a th:href="@{'/wishes/delete/' + ${wish.id}}"
+                <a th:href="@{'/wish/delete/' + ${wish.id}}"
                    onclick="return confirm('Er du sikker på, at du vil slette dette ønske?');"
                    class="bg-red-600 hover:bg-red-500 px-4 py-2 rounded-lg text-white font-medium transition block text-center">
                     Slet
@@ -89,7 +93,7 @@
 <!-- Tom tilstand -->
 <section th:if="${#lists.isEmpty(wishes)}" class="text-center mt-20 text-gray-400">
     <p>Du har endnu ingen ønsker på denne ønskeseddel. Klik på
-        <a href="/wishes/add" class="text-yellow-300 underline hover:text-yellow-200">Tilføj nyt ønske</a>.
+        <a th:href="@{'/wish/add/' + ${wishlist.id}}" class="text-yellow-300 underline hover:text-yellow-200">Tilføj nyt ønske</a>.
     </p>
 </section>
 

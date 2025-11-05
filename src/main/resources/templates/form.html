@@ -3,54 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Nyt Ønske | HaqqWish</title>
-    <!-- Tailwind CSS til moderne design -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<!-- Baggrund og generel stil for hele siden -->
 <body class="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 min-h-screen text-gray-100 font-sans">
 
-<!-- Navigation øverst -->
+<!-- Navigation -->
 <nav class="flex justify-between items-center px-10 py-6 bg-white/10 backdrop-blur-md border-b border-blue-700/50">
-    <!-- Logo og titel -->
     <div class="flex items-center space-x-2">
         <div class="bg-white rounded-full w-9 h-9 flex items-center justify-center text-sky-600 font-bold text-xl">☁</div>
         <h1 class="text-2xl font-bold tracking-tight">HaqqWish</h1>
     </div>
-
-    <!-- Tilbage-link -->
-    <a href="/wishes/lists" class="text-yellow-300 hover:text-yellow-100 font-medium">← Tilbage</a>
+    <a th:href="@{'/wishes/viewlist/' + ${wishlistId}}" class="text-yellow-300 hover:text-yellow-100 font-medium">← Tilbage</a>
 </nav>
 
-<!-- Formular-boks -->
+<!-- Formular -->
 <div class="max-w-md mx-auto mt-16 bg-blue-950/50 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-blue-800/50">
-
-    <!-- Overskrift -->
     <h1 class="text-3xl text-center font-bold text-yellow-400 mb-6">Tilføj Nyt Ønske</h1>
 
-    <!-- Formular til at tilføje et nyt ønske -->
-    <!-- rettet action til at matche @RequestMapping("/wish") + @PostMapping("/add/{wishlistId}") -->
     <form th:action="@{'/wish/add/' + ${wishlistId}}" th:object="${wish}" method="post" class="space-y-5">
 
-        <!-- Felt for beskrivelse -->
         <div>
             <label class="block text-yellow-300 mb-1">Beskrivelse</label>
             <input type="text" th:field="*{description}" class="w-full rounded px-3 py-2 text-gray-900" required>
         </div>
 
-        <!-- Felt for link -->
         <div>
             <label class="block text-yellow-300 mb-1">Link</label>
             <input type="url" th:field="*{link}" class="w-full rounded px-3 py-2 text-gray-900" required>
         </div>
 
-        <!-- Felt for pris -->
         <div>
             <label class="block text-yellow-300 mb-1">Pris (DKK)</label>
             <input type="number" step="0.01" th:field="*{price}" class="w-full rounded px-3 py-2 text-gray-900" required>
         </div>
 
-        <!-- Gem-knap -->
         <button type="submit"
                 class="w-full bg-yellow-400 text-blue-900 font-semibold py-2 rounded-lg hover:bg-yellow-300 transition">
             Gem Ønske
