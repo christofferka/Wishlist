@@ -47,9 +47,7 @@ public class AuthController {
         return "login";
     }
 
-    /**
-     * Viser registreringssiden (GET-request).
-     */
+    //Viser registreringssiden (GET-request).
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new User());
@@ -71,9 +69,7 @@ public class AuthController {
         return "redirect:/login";
     }
 
-    /**
-     * Logger brugeren ud ved at fjerne session-data.
-     */
+    //Logger brugeren ud ved at fjerne session-data.
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); // Fjern nuværende login-session

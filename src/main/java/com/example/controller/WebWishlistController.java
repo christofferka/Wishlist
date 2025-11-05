@@ -28,9 +28,7 @@ public class WebWishlistController {
         this.wishService = wishService;
     }
 
-    // ===========================
     //  VIS ALLE ØNSKESEDLER
-    // ===========================
     @GetMapping("/lists")
     public String showAllWishlists(Model model, HttpSession session) {
         User currentUser = (User) session.getAttribute("currentUser");
@@ -42,9 +40,8 @@ public class WebWishlistController {
         return "wishlists"; // viser oversigten over ønskesedler
     }
 
-    // ===========================
+
     //  OPRET NY ØNSKESEDDEL
-    // ===========================
     @PostMapping("/createList")
     public String createNewWishlist(@ModelAttribute Wishlist newWishlist, HttpSession session) {
         User currentUser = (User) session.getAttribute("currentUser");
@@ -54,9 +51,7 @@ public class WebWishlistController {
         return "redirect:/wishes/lists";
     }
 
-    // ===========================
     //  VIS EN SPECIFIK ØNSKESEDDEL
-    // ===========================
     @GetMapping("/viewlist/{id}")
     public String viewSpecificWishlist(@PathVariable Long id, Model model, HttpSession session) {
         User currentUser = (User) session.getAttribute("currentUser");
@@ -74,9 +69,7 @@ public class WebWishlistController {
                 .orElse("redirect:/wishes/lists");
     }
 
-    // ===========================
     //  SLET ØNSKESEDDEL
-    // ===========================
     @GetMapping("/deletelist/{id}")
     public String deleteWishlist(@PathVariable Long id, HttpSession session) {
         User currentUser = (User) session.getAttribute("currentUser");
@@ -90,9 +83,7 @@ public class WebWishlistController {
         return "redirect:/wishes/lists";
     }
 
-    // ===========================
     //  DEL ØNSKESEDDEL (OFFENTLIG VISNING)
-    // ===========================
     @GetMapping("/share/{shareId}")
     public String viewSharedWishlist(@PathVariable String shareId, Model model) {
         return wishlistService.getWishlistByShareId(shareId)

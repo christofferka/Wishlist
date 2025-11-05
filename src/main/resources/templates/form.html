@@ -19,7 +19,7 @@
     </div>
 
     <!-- Tilbage-link -->
-    <a href="/wishes/list" class="text-yellow-300 hover:text-yellow-100 font-medium">← Tilbage</a>
+    <a href="/wishes/lists" class="text-yellow-300 hover:text-yellow-100 font-medium">← Tilbage</a>
 </nav>
 
 <!-- Formular-boks -->
@@ -29,7 +29,8 @@
     <h1 class="text-3xl text-center font-bold text-yellow-400 mb-6">Tilføj Nyt Ønske</h1>
 
     <!-- Formular til at tilføje et nyt ønske -->
-    <form th:action="@{/wishes/add}" th:object="${wish}" method="post" class="space-y-5">
+    <!-- rettet action til at matche @RequestMapping("/wish") + @PostMapping("/add/{wishlistId}") -->
+    <form th:action="@{'/wish/add/' + ${wishlistId}}" th:object="${wish}" method="post" class="space-y-5">
 
         <!-- Felt for beskrivelse -->
         <div>

@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Dette er hovedklassen for Spring Boot applikation.
  * Den starter hele programmet og konfigurere alle komponenter automatisk.
  */
-@SpringBootApplication  // Kombinerer @Configuration, @EnableAutoConfiguration og @ComponentScan
+@SpringBootApplication
 public class WishlistApplication {
 
     public static void main(String[] args) {

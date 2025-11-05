@@ -10,9 +10,7 @@
 <!-- Baggrund og generel styling -->
 <body class="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 min-h-screen text-gray-100 font-sans">
 
-<!-- ===========================
-     NAVIGATION BAR
-     =========================== -->
+<!-- NAVIGATION BAR -->
 <nav class="flex justify-between items-center px-10 py-6 bg-blue-950/70 backdrop-blur-md shadow-lg border-b border-blue-800/50 fixed top-0 left-0 w-full z-50">
     <!-- Logo og hjem-knap -->
     <a href="/" class="flex items-center space-x-2 group">
@@ -21,19 +19,18 @@
     </a>
 
     <!-- Tilbage til oversigt -->
-    <a href="/wishes/list" class="text-yellow-300 hover:text-yellow-100 font-medium">← Tilbage</a>
+    <a href="/wishes/lists" class="text-yellow-300 hover:text-yellow-100 font-medium">← Tilbage</a>
 </nav>
 
-<!-- ===========================
-     REDIGERINGSFORMULAR
-     =========================== -->
+<!-- REDIGERINGSFORMULAR -->
 <div class="max-w-md mx-auto mt-32 bg-blue-950/50 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-blue-800/50">
 
     <!-- Overskrift -->
     <h1 class="text-3xl text-center font-bold text-yellow-400 mb-6">Rediger Ønske</h1>
 
     <!-- Formular til at redigere et eksisterende ønske -->
-    <form th:action="@{'/wishes/update/' + ${wish.id}}" th:object="${wish}" method="post" class="space-y-5">
+    <!-- rettet action til at matche @RequestMapping("/wish") + @PostMapping("/update/{id}") -->
+    <form th:action="@{'/wish/update/' + ${wish.id}}" th:object="${wish}" method="post" class="space-y-5">
 
         <!-- Beskrivelse -->
         <div>
@@ -61,7 +58,7 @@
 
         <!-- Knapper nederst -->
         <div class="flex justify-between pt-6">
-            <a href="/wishes/list"
+            <a href="/wishes/lists"
                class="text-yellow-300 hover:text-yellow-100 transition">← Tilbage</a>
             <button type="submit"
                     class="bg-yellow-400 text-blue-900 font-semibold py-2 px-5 rounded-lg hover:bg-yellow-300 transition">
@@ -71,9 +68,7 @@
     </form>
 </div>
 
-<!-- ===========================
-     FOOTER
-     =========================== -->
+<!-- FOOTER -->
 <footer class="text-center mt-20 py-6 text-sm text-gray-400 border-t border-blue-800/50">
     © 2025 HaqqWish — Alle dine ønsker samlet ét sted
 </footer>

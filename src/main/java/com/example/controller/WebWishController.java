@@ -25,9 +25,7 @@ public class WebWishController {
         this.wishlistService = wishlistService;
     }
 
-    // ===========================
     //  OPRET ØNSKE
-    // ===========================
     @GetMapping("/add/{wishlistId}")
     public String showAddForm(@PathVariable Long wishlistId, Model model, HttpSession session) {
         if (session.getAttribute("currentUser") == null) return "redirect:/login";
@@ -50,9 +48,7 @@ public class WebWishController {
         return "redirect:/wishes/viewlist/" + wishlistId;
     }
 
-    // ===========================
     //  REDIGER ØNSKE
-    // ===========================
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model, HttpSession session) {
         if (session.getAttribute("currentUser") == null) return "redirect:/login";
@@ -81,9 +77,7 @@ public class WebWishController {
                 .orElse("redirect:/wishes/lists");
     }
 
-    // ===========================
     //  SLET ØNSKE
-    // ===========================
     @GetMapping("/delete/{id}")
     public String deleteWish(@PathVariable Long id, HttpSession session) {
         User currentUser = (User) session.getAttribute("currentUser");
@@ -98,33 +92,5 @@ public class WebWishController {
                     return "redirect:/wishes/viewlist/" + wishlistId;
                 })
                 .orElse("redirect:/wishes/lists");
-    }
-
-    // ===========================
-    //  RESERVATION (OFFENTLIG VISNING)
-    // ===========================
-    @PostMapping("/share/{shareId}/reserve/{wishId}")
-    public String reserveWish(
-            @PathVariable String shareId,
-            @PathVariable Long wishId,
-            @RequestParam String name
-    ) {
-        wishService.reserveWish(wishId, name);
-        return "redirect:/wishes/share/" + shareId;
-    }
-
-    @PostMapping("/share/{shareId}/cancel/{wishId}")
-    public String cancelReservation(
-            @PathVariable String shareId,
-            @PathVariable Long wishId,
-            HttpSession session
-    ) {
-        User currentUser = (User) session.getAttribute("currentUser");
-        wishlistService.getWishlistByShareId(shareId).ifPresent(wishlist -> {
-            if (currentUser != null && wishlist.getUser().getId().equals(currentUser.getId())) {
-                wishService.cancelReservation(wishId);
-            }
-        });
-        return "redirect:/wishes/share/" + shareId;
     }
 }
